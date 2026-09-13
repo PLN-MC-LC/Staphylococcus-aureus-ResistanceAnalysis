@@ -45,8 +45,8 @@ def stemming(df, abstract_column):
 
 
 def lemmatization(df, abstract_column):
-    #TODO: implement
-    return
+    df[abstract_column] = [" ".join([token.lemma_ for token in doc]) for doc in df[abstract_column]]
+    return df
 
 
 def criar_pipeline(preprocessamento):
