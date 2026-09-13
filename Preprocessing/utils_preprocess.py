@@ -25,8 +25,9 @@ def importar_arq(diretorio, abstract_column):
 
 
 def tokenizar(df, abstract_column):
-    #TODO: implement
-    return
+    df[abstract_column] = df[abstract_column].astype(str).fillna("")
+    df[abstract_column] = list(nlp.pipe(df[abstract_column]))
+    return df
 
 
 def case_folding(df, abstract_column):
