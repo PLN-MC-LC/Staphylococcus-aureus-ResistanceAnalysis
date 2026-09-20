@@ -1,43 +1,30 @@
 import regex as re
 import pandas as pd
 import spacy
-from utils_proprocess import (importar_arq)
-
-nlp = spacy.load('en_core_sci_sm')
-
+from utils_preprocess import (importar_arq)
+from utils_regex import get_regex, verifica_regex
 
 
-i = -1
+amostra = verifica_regex(
+    properties,
+    antibiotics,
+    values,
+    sentences,
+    abstract_indices,
+    5
+)
 
-for abstract in df["Abstract"]:
-    i+=1
-    doc = nlp(str(abstract))
-    for sentence in doc.sents:
-        property = re.search(r"\b(?:susceptible|sensitive)\b", str(sentence), re.IGNORECASE)
+for (
+    property_,
+    antibiotic,
+    value,
+    sentence,
+    abstract_index
+) in amostra:
 
-        if property!=None:
-            value = re.search(
-                r"\d+(?:\.\d+)?\s*%",
-                str(sentence)
-            )
-
-            if value!=None:
-                antibiotic = re.search(
-                    r"\b(?:to|against)\s+([A-Za-z]+(?:[- ][A-Za-z]+)*)",
-                    str(sentence),
-                    re.IGNORECASE
-                )
-
-                if antibiotic != None:
-
-                    print(
-                        'No Abstract', i,
-                        'MRSA é', property[0],
-                        'a', antibiotic.group(1),
-                        'em', value[0]
-                    )
-
-                    print(
-                        'Sentença de extração do abstract',
-                        i, ':', sentence
-                    )
+    print("Abstract:", abstract_index)
+    print("MRSA:", property_)
+    print("Antibiótico:", antibiotic)
+    print("Valor:", value)
+    print("Sentença:", sentence)
+    print("-" * 80)
