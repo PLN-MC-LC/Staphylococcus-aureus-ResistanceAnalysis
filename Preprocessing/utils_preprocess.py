@@ -3,6 +3,7 @@ import nltk
 from nltk.corpus import stopwords
 import scispacy
 import spacy
+import os
 
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
@@ -39,31 +40,31 @@ def stop_word_removal(df, abstract_column):
     return df
 
 
-def stemming(df, abstract_column):
-    #TODO: implement
-    return
-
-
 def lemmatization(df, abstract_column):
     df[abstract_column] = [" ".join([token.lemma_ for token in doc]) for doc in df[abstract_column]]
     return df
 
 
-def criar_pipeline(preprocessamento):
-    print("TODO")
-    pipeline = "a"
-    nome_pipeline = "a"
-    return pipeline, nome_pipeline
+def preprocessar(passos, df, abstract_column):
+    name = ""
+    if "case-folding" in passos:
+        df = case_folding(df, abstract_column)
+        name += "cf-"
+    if "stop-word-removal" in passos:
+        df = case_folding(df, abstract_column)
+        name += "swr-"
+    if "lemmatization" in passos:
+        df = lemmatization(df, abstract_column)
+        name += "lm-"
+
+    name += "processed.csv"
+    return df, name
 
 
-def preprocessar(pipeline, arquivo):
-    df = "a"
-    return df
-
-
-def criar_nome(nome_pipeline):
-    return
-
-
-def salvar_arquivo(nome_arquivo, arquivo):
+def salvar_arquivo(nome_arquivo, arquivo, output):
+    caminho = os.path.join(output, nome_arquivo)
+    arquivo.to_csv(
+        caminho,
+        index=False,
+    )
     return
