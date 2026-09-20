@@ -15,8 +15,8 @@ PREPROCESSAMENTOS = ["case-folding", "stop-word-removal",
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Processa artigos com diversos métodos",
-        formatter_class=argparse.RawDesctiptionHelpFormatter,
+        description="Processa artigos com diversos mï¿½todos",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
         epilot="preprocess.py --arg1",
     )
 
@@ -24,7 +24,7 @@ def main():
         "preprocessamentos",
         nargs="*",
         choices=list(PREPROCESSAMENTOS),
-        help="Preprocessamentos disponíveis",
+        help="Preprocessamentos disponï¿½veis",
     )
 
     parser.add_argument(
@@ -36,7 +36,7 @@ def main():
     parser.add_argument(
         "--output",
         required=True,
-        help="Caminho do CSV de saída.",
+        help="Caminho do CSV de saï¿½da.",
     )
 
     parser.add_argument(
@@ -57,7 +57,7 @@ def main():
     resultado = preprocessar(pipeline, df, args.abstract_column)
     nome_arquivo = criar_nome(nome_pipeline)
     salvar_arquivo(nome_arquivo, resultado)
-    print("Processamento finalizado, os seus arquivos estão salvos em...")
+    print("Processamento finalizado, os seus arquivos estï¿½o salvos em...")
 
 
 if __name__ == "__main__":
