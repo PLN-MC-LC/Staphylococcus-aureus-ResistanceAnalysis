@@ -2,22 +2,21 @@ import os
 import argparse
 import json
 from dotenv import load_dotenv
-from utils_proprocess import (importar_arq, criar_pipeline,
-                              preprocessar, criar_nome,
-                              salvar_arquivo)
+from utils_preprocess import (importar_arq, tokenizar,
+                              preprocessar, salvar_arquivo)
 # carregar utils
 
 load_dotenv()
 
 PREPROCESSAMENTOS = ["case-folding", "stop-word-removal",
-                     "stemming", "lemmatization"]
+                     "lemmatization"]
 
 
 def main():
     parser = argparse.ArgumentParser(
         description="Processa artigos com diversos métodos",
         formatter_class=argparse.RawDesctiptionHelpFormatter,
-        epilot="preprocess.py --arg1",
+        epilot="preprocess.py [preprocessamentos] --input [local] --output [local]",
     )
 
     parser.add_argument(
@@ -53,11 +52,18 @@ def main():
 
     args = parser.parse_args()
     df = importar_arq(args.input, args.abstract_column)
-    pipeline, nome_pipeline = criar_pipeline(args.preprocessamentos)
-    resultado = preprocessar(pipeline, df, args.abstract_column)
-    nome_arquivo = criar_nome(nome_pipeline)
-    salvar_arquivo(nome_arquivo, resultado)
-    print("Processamento finalizado, os seus arquivos estão salvos em...")
+
+    if args.tokenizar:
+        df = tokenizar(df, args.abstract_column)
+
+    if args.preprocessamento:
+        passos = args.preprocessamento
+        resultado, arquivo = preprocessar(passos, df, args.abstract_column)
+        salvar_arquivo(arquivo, resultado, args.output)
+        print("Processamento finalizado!")
+        print(f"Seu arquivo está salvo em {args.output}")
+    else:
+        print("Você deve selecionar pelo menos um pré-processamento.")
 
 
 if __name__ == "__main__":
