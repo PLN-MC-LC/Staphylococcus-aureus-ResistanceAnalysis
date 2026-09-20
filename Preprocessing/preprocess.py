@@ -14,16 +14,16 @@ PREPROCESSAMENTOS = ["case-folding", "stop-word-removal",
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Processa artigos com diversos m�todos",
-        formatter_class=argparse.RawDesctiptionHelpFormatter,
-        epilot="preprocess.py [preprocessamentos] --input [local] --output [local]",
+        description="Processa artigos com diversos mï¿½todos",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilot="preprocess.py --arg1",
     )
 
     parser.add_argument(
         "preprocessamentos",
         nargs="*",
         choices=list(PREPROCESSAMENTOS),
-        help="Preprocessamentos dispon�veis",
+        help="Preprocessamentos disponï¿½veis",
     )
 
     parser.add_argument(
@@ -35,7 +35,7 @@ def main():
     parser.add_argument(
         "--output",
         required=True,
-        help="Caminho do CSV de sa�da.",
+        help="Caminho do CSV de saï¿½da.",
     )
 
     parser.add_argument(
@@ -61,9 +61,9 @@ def main():
         resultado, arquivo = preprocessar(passos, df, args.abstract_column)
         salvar_arquivo(arquivo, resultado, args.output)
         print("Processamento finalizado!")
-        print(f"Seu arquivo est� salvo em {args.output}")
+        print(f"Seu arquivo está salvo em {args.output}")
     else:
-        print("Voc� deve selecionar pelo menos um pr�-processamento.")
+        print("Você deve selecionar pelo menos um pré-processamento.")
 
 
 if __name__ == "__main__":

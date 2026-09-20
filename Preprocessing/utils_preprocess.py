@@ -12,7 +12,7 @@ nlp = spacy.load("en_core_sci_sm")
 
 def importar_arq(diretorio, abstract_column):
     try:
-        df = pd.from_csv(diretorio)
+        df = pd.read_csv(diretorio)
     except FileNotFoundError:
         print("Arquivo não encontrado")
 
