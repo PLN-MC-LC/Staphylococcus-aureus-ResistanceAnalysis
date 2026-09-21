@@ -252,3 +252,5 @@ dist/
 .dir-locals.el
 *.~undo-tree~
 TAGS
+
+prompts.py
