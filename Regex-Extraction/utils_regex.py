@@ -1,17 +1,17 @@
 import regex as re
 import pandas as pd
 import spacy
-from utils_preprocess import (importar_arq)
+import random
 
 nlp = spacy.load('en_core_sci_sm')
 
 
-def get_regex(diretorio, abstract_column):
+def get_regex(diretorio, abstract_column_tok):
     properties = []
     antibiotics = []
     values = []
 
-    doc = nlp(str(abstract_column))
+    doc = str(abstract_column_tok)
 
     for sentence in doc.sents:
 
@@ -21,14 +21,14 @@ def get_regex(diretorio, abstract_column):
             re.IGNORECASE
         )
 
-        if property != None:
+        if property is not None:
 
             value = re.search(
                 r"\d+(?:\.\d+)?\s*%",
                 str(sentence)
             )
 
-            if value != None:
+            if value is not None:
 
                 antibiotic = re.search(
                     r"\b(?:to|against)\s+([A-Za-z]+(?:[- ][A-Za-z]+)*)",
@@ -36,7 +36,7 @@ def get_regex(diretorio, abstract_column):
                     re.IGNORECASE
                 )
 
-                if antibiotic != None:
+                if antibiotic is not None:
 
                     properties.append(property[0])
                     antibiotics.append(antibiotic.group(1))
@@ -44,7 +44,6 @@ def get_regex(diretorio, abstract_column):
 
     return properties, antibiotics, values, sentence
 
-import random
 
 def verifica_regex(
     properties,

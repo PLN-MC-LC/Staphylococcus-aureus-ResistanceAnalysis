@@ -23,7 +23,7 @@ def main():
     parser.add_argument(
         "--abstract_column",
         required=True,
-        help="Coluna que contém os abstracts",
+        help="Coluna que contém os abstracts. Eles devem estar tokenizados",
     )
 
     args = parser.parse_args()
