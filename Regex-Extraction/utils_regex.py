@@ -2,49 +2,61 @@ import regex as re
 import pandas as pd
 import spacy
 from utils_preprocess import (importar_arq)
+import random as rd
 
 nlp = spacy.load('en_core_sci_sm')
 
 
 def get_regex(diretorio, abstract_column):
+
     properties = []
     antibiotics = []
     values = []
+    sentences = []
+    abstract_indices = []
 
-    doc = nlp(str(abstract_column))
+    for abstract_index, abstract in enumerate(abstract_column):
 
-    for sentence in doc.sents:
+        doc = nlp(str(abstract))
 
-        property = re.search(
-            r'\b(?:susceptible|sensitive)\b',
-            str(sentence),
-            re.IGNORECASE
-        )
+        for sentence in doc.sents:
 
-        if property != None:
-
-            value = re.search(
-                r"\d+(?:\.\d+)?\s*%",
-                str(sentence)
+            property = re.search(
+                r'\b(?:susceptible|sensitive|resistant)\b',
+                str(sentence),
+                re.IGNORECASE
             )
 
-            if value != None:
+            if property is not None:
 
-                antibiotic = re.search(
-                    r"\b(?:to|against)\s+([A-Za-z]+(?:[- ][A-Za-z]+)*)",
-                    str(sentence),
-                    re.IGNORECASE
+                value = re.search(
+                    r"\d+(?:\.\d+)?\s*%",
+                    str(sentence)
                 )
 
-                if antibiotic != None:
+                if value is not None:
 
-                    properties.append(property[0])
-                    antibiotics.append(antibiotic.group(1))
-                    values.append(value[0])
+                    antibiotic = re.search(
+                        r"\b(?:to|against)\s+([A-Za-z]+(?:[- ][A-Za-z]+)*)",
+                        str(sentence),
+                        re.IGNORECASE
+                    )
 
-    return properties, antibiotics, values, sentence
+                    if antibiotic is not None:
 
-import random
+                        properties.append(property.group(0))
+                        antibiotics.append(antibiotic.group(1))
+                        values.append(value.group(0))
+                        sentences.append(str(sentence))
+                        abstract_indices.append(abstract_index)
+
+    return (
+        properties,
+        antibiotics,
+        values,
+        sentences,
+        abstract_indices
+    )
 
 def verifica_regex(
     properties,
@@ -62,9 +74,15 @@ def verifica_regex(
         abstract_indices
     ))
 
-    amostra = random.sample(
+    amostra = rd.sample(
         dados,
         min(n, len(dados))
     )
+    for propriedade, antibiotico, valor, sentença, i in amostra:
+        print(f"No abstract {i}, foi {valor} {propriedade} a {antibiotico}")
+        print(f"Sentença completa: {sentença}")
+        print()
+        print("------------------------------------------------------")
+        print()
 
     return amostra
