@@ -9,7 +9,7 @@ amostra = verifica_regex(
     properties,
     antibiotics,
     values,
-    sentences,
+    sentence,
     abstract_indices,
     5
 )
