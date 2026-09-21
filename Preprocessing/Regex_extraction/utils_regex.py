@@ -42,19 +42,29 @@ def get_regex(diretorio, abstract_column):
                     antibiotics.append(antibiotic.group(1))
                     values.append(value[0])
 
-    return properties, antibiotics, values
+    return properties, antibiotics, values, sentence
 
 import random
 
-def verifica_regex(properties, antibiotics, values):
+def verifica_regex(
+    properties,
+    antibiotics,
+    values,
+    sentences,
+    abstract_indices,
+    n
+):
+    dados = list(zip(
+        properties,
+        antibiotics,
+        values,
+        sentences,
+        abstract_indices
+    ))
 
-    indices = random.sample(
-        range(len(properties)),
-        min(5, len(properties))
+    amostra = random.sample(
+        dados,
+        min(n, len(dados))
     )
 
-    properties_amostra = [properties[i] for i in indices]
-    antibiotics_amostra = [antibiotics[i] for i in indices]
-    values_amostra = [values[i] for i in indices]
-
-    return properties_amostra, antibiotics_amostra, values_amostra
+    return amostra
