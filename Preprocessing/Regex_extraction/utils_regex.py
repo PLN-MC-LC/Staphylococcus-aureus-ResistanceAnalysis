@@ -50,7 +50,7 @@ def verifica_regex(
     properties,
     antibiotics,
     values,
-    sentences,
+    sentence,
     abstract_indices,
     n
 ):
@@ -58,7 +58,7 @@ def verifica_regex(
         properties,
         antibiotics,
         values,
-        sentences,
+        sentence,
         abstract_indices
     ))
 
