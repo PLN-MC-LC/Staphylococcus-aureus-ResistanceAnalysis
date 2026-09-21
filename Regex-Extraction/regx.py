@@ -1,30 +1,35 @@
-import regex as re
-import pandas as pd
-import spacy
 from utils_preprocess import (importar_arq)
 from utils_regex import get_regex, verifica_regex
+import argparse
 
 
-amostra = verifica_regex(
-    properties,
-    antibiotics,
-    values,
-    sentence,
-    abstract_indices,
-    5
-)
+def main():
+    parser = argparse.ArgumentParser(
+        description="Processa Abstracts usando regras regex.",
+    )
 
-for (
-    property_,
-    antibiotic,
-    value,
-    sentence,
-    abstract_index
-) in amostra:
+    parser.add_argument(
+        "--input",
+        required=True,
+        help="Caminho do CSV de entrada"
+    )
 
-    print("Abstract:", abstract_index)
-    print("MRSA:", property_)
-    print("Antibiótico:", antibiotic)
-    print("Valor:", value)
-    print("Sentença:", sentence)
-    print("-" * 80)
+    parser.add_argument(
+        "--output",
+        required=True,
+        help="Caminho do CSV de entrada"
+    )
+
+    parser.add_argument(
+        "--abstract_column",
+        required=True,
+        help="Coluna que contém os abstracts",
+    )
+
+    args = parser.parse_args()
+
+    df = importar_arq(args.input, args.abstract_column)
+
+    props, antibiotics, values, sentence = get_regex(df, args.abstract_column)
+    verifica_regex(props, antibiotics, values, sentence)
+    return
