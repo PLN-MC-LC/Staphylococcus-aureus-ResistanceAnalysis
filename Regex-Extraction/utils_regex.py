@@ -7,20 +7,22 @@ import random as rd
 nlp = spacy.load('en_core_sci_sm')
 
 
-def get_regex(diretorio, abstract_column_tok):
+def get_regex(abstract_column_tok):
     properties = []
     antibiotics = []
     values = []
     sentences = []
     abstract_indices = []
-
-    for abstract_index, abstract in enumerate(abstract_column_tok):
-        doc = str(abstract_column_tok)
+    
+    i = -1
+    for abstract in abstract_column_tok:
+        i += 1 
+        doc = nlp(str(abstract))
 
         for sentence in doc.sents:
 
             property = re.search(
-                r'\b(?:susceptible|sensitive|resistant)\b',
+                r'\b(?:susceptible|sensitive|resistant|resistance)\b',
                 str(sentence),
                 re.IGNORECASE
             )
@@ -46,7 +48,7 @@ def get_regex(diretorio, abstract_column_tok):
                         antibiotics.append(antibiotic.group(1))
                         values.append(value.group(0))
                         sentences.append(str(sentence))
-                        abstract_indices.append(abstract_index)
+                        abstract_indices.append(i)
 
     return (
         properties,
@@ -84,3 +86,7 @@ def verifica_regex(
         print()
 
     return amostra
+
+def make_df_regex(df, abstract_indices):
+    df_regex = df.iloc[abstract_indices].copy()
+    return df_regex

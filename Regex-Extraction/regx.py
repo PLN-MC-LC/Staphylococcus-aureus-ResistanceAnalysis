@@ -1,5 +1,5 @@
 from utils_preprocess import (importar_arq)
-from utils_regex import get_regex, verifica_regex
+from utils_regex import get_regex, verifica_regex, make_df_regex
 import argparse
 
 
@@ -30,6 +30,7 @@ def main():
 
     df = importar_arq(args.input, args.abstract_column)
 
-    props, antibiotics, values, sentence = get_regex(df, args.abstract_column)
-    verifica_regex(props, antibiotics, values, sentence)
+    props, antibiotics, values, sentences, abstract_indices = get_regex(df, args.abstract_column)
+    verifica_regex(props, antibiotics, values, sentences, abstract_indices, 10)
+    df_regex = make_df_regex(df, abstract_indices)
     return
