@@ -7,17 +7,15 @@ import random as rd
 nlp = spacy.load('en_core_sci_sm')
 
 
-def get_regex(diretorio, abstract_column):
-
+def get_regex(diretorio, abstract_column_tok):
     properties = []
     antibiotics = []
     values = []
     sentences = []
     abstract_indices = []
 
-    for abstract_index, abstract in enumerate(abstract_column):
-
-        doc = nlp(str(abstract))
+    for abstract_index, abstract in enumerate(abstract_column_tok):
+        doc = str(abstract_column_tok)
 
         for sentence in doc.sents:
 
