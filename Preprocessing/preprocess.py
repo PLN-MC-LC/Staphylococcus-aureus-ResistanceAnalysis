@@ -2,8 +2,8 @@ import os
 import argparse
 import json
 from dotenv import load_dotenv
-from utils_preprocess import (importar_arq, tokenizar,
-                              preprocessar, salvar_arquivo)
+from utils_preprocess import (importar_arq, preprocessar, 
+                              salvar_arquivo)
 # carregar utils
 
 load_dotenv()
@@ -16,7 +16,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Processa artigos com diversos mï¿½todos",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilot="preprocess.py --arg1",
+        epilog="preprocess.py [args]",
     )
 
     parser.add_argument(
@@ -52,16 +52,21 @@ def main():
 
     args = parser.parse_args()
     df = importar_arq(args.input, args.abstract_column)
+    
+    if args.preprocessamentos:
+        passos = args.preprocessamentos
 
-    if args.tokenizar:
-        df = tokenizar(df, args.abstract_column)
-
-    if args.preprocessamento:
-        passos = args.preprocessamento
-        resultado, arquivo = preprocessar(passos, df, args.abstract_column)
+        resultado, arquivo = preprocessar(
+            passos,
+            df,
+            args.abstract_column,
+            args.tokenizar
+        )
+        
         salvar_arquivo(arquivo, resultado, args.output)
         print("Processamento finalizado!")
         print(f"Seu arquivo está salvo em {args.output}")
+    
     else:
         print("Você deve selecionar pelo menos um pré-processamento.")
 
