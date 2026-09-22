@@ -1,0 +1,18 @@
+name: MRSA_PLN
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.11
+  - pandas=2.3.2
+  - pip
+
+  - pip:
+      - python-dotenv==1.1.1
+      - nltk==3.9.1
+      - regex==2025.9.1
+      - openai==1.107.1
+      - scispacy==0.5.5
+      - spacy==3.7.5
