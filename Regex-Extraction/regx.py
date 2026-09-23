@@ -31,6 +31,6 @@ def main():
 
     props, antibiotics, values, sentences, abstract_indices = get_regex(df[args.abstract_column])
     verifica_regex(props, antibiotics, values, sentences, abstract_indices, 10)
-    df_regex = make_df_regex(df, abstract_indices)
+    df_regex = make_df_regex(df, "Abstract", abstract_indices)
     df_regex.to_csv(args.output, index=False,)
     return True
