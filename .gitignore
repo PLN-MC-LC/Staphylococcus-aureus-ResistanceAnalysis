@@ -219,10 +219,6 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# arquivos baixados/tratados
-corpora/
-tratados/
-
 ### Emacs temporary and backup files ###
 *~
 \#*\#
@@ -253,4 +249,10 @@ dist/
 *.~undo-tree~
 TAGS
 
+# arquivos baixados/tratados
+corpora/
+tratados/
+extracoes/
+
+# Promps de Sistema e Assistente
 prompts.py
