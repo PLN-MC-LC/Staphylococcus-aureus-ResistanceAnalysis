@@ -1,10 +1,10 @@
 import os
 import argparse
-import json
+# import json
 from dotenv import load_dotenv
 from openai import OpenAI
-from utils_preprocess import (importar_arq)
-from utils_llm_extraction import (perguntar, extrair_llm)
+from utils_llm_extration import (testar_conexao, perguntar, extrair_llm,
+                                 importar_arq)
 from prompts import (SYSTEM, ASSISTANT)
 
 load_dotenv()
@@ -12,10 +12,11 @@ load_dotenv()
 API_KEY = os.getenv("ILUMA_API_KEY")
 BASE_URL = "https://iluma.cnpem.br:4000/v1"
 MODEL = "iluma"
-TEMP_EXTRACAO = 0.5
+TEMP_EXT = 0.5
+TIMEOUT_SECS = 500
 
 client = OpenAI(base_url=BASE_URL, api_key=API_KEY,
-                timeout=60.0, max_retries=1)
+                timeout=TIMEOUT_SECS, max_retries=1)
 
 
 def main():
@@ -47,18 +48,20 @@ def main():
 
     df = importar_arq(args.input, args.abstract_column)
 
-    jsons_extracted = []
+    if testar_conexao(client, MODEL, TEMP_EXT):
+        json_extracted = []
+        for abstract in df[args.abstract_column]:
+            resposta = perguntar(client, MODEL, TEMP_EXT,
+                                 abstract, SYSTEM)
+            json_limpo = extrair_llm(resposta)
+            print(json_limpo)
+            json_extracted.append(json_limpo)
+    else:
+        print("Não há conexão com a ILUMA")
+        return False
+    print(json_extracted)
+    return True
 
-    for abstract in df[args.abstract_column]:
-        user = abstract
-        resposta = perguntar(client, MODEL,
-                             TEMP_EXTRACAO, user,
-                             SYSTEM, ASSISTANT)
-        json_ext = extrair_llm(resposta)
-        jsons_extracted.append(json_ext)
 
-    path = os.path.join(args.output, "extracao.json")
-    with open(path, "w", encoding="utf-8") as file:
-        json.dump(jsons_extracted, file, indent=4)
-        print(f"Sua extração está disponível em: {path}!")
-    return
+if __name__ == "__main__":
+    main()
