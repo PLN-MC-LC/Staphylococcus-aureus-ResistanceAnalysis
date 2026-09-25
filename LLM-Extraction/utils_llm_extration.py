@@ -20,7 +20,18 @@ def importar_arq(diretorio, abstract_column):
     return df
 
 
-def perguntar(client, MODEL, TEMP, user, system=None, assistant=None):
+def testar_conexao(client, MODEL, TEMP):
+    conexao = perguntar(client, MODEL,
+                        TEMP, "Responda apenas: conexão OK.")
+
+    if conexao:
+        print(conexao)
+        return True
+    return False
+
+
+def perguntar(client, MODEL, TEMP, user, system=None, assistant=None,
+              json_mode=False, max_tokens=16000):
     mensagens = []
     if system:
         mensagens.append({"role": "system", "content": system})
@@ -30,10 +41,17 @@ def perguntar(client, MODEL, TEMP, user, system=None, assistant=None):
             mensagens.append({"role": "user", "content": a_user})
     mensagens.append({"role": "user", "content": user})
 
-    resposta = client.chat.completions.create(model=MODEL, messages=mensagens,
-                                              temperature=TEMP)
-    
-    return resposta.choices[0].message.content
+    extra = {"response_format": {"type": "json_object"}} if json_mode else {}
+
+    resposta = client.chat.completions.create(model=MODEL,
+                                              messages=mensagens,
+                                              max_tokens=max_tokens,
+                                              temperature=TEMP,
+                                              **extra)
+    msg = resposta.choices[0].message
+    finish = resposta.choices[0].finish_reason
+
+    return msg.content, getattr(msg, "reasoning", None), finish
 
 
 def limpar_cercas(texto):
@@ -44,19 +62,26 @@ def limpar_cercas(texto):
     return t
 
 
-def extrair_llm(resposta):
+def ler_json(resposta):
+    t = limpar_cercas(resposta)
     try:
-        return json.loads(limpar_cercas(resposta)).get("extrações", [])
+        return json.loads(t)
     except json.JSONDecodeError:
-        print("  (resposta não era JSON):", resposta[:120])
-    return []
+        m = re.search(r"\{.*\}", t, re.S)
+        if m:
+            try:
+                return json.loads(m.group())
+            except json.JSONDecodeError:
+                pass
+        print("  (resposta não era JSON):", t[:120])
+    return {}
 
 
-def testar_conexao(client, MODEL, TEMP):
-    conexao = perguntar(client, MODEL,
-                        TEMP, "Responda apenas: conexão OK.")
-
-    if conexao:
-        print(conexao)
-        return True
-    return False
+def extrair_llm(client, MODEL, TEMP, abstract,
+                SYSTEM=None, ASSISTANT=None, i=None):
+    resposta, raciocinio, motivo = perguntar(client, MODEL, TEMP,
+                                             abstract, SYSTEM,
+                                             ASSISTANT, json_mode=True)
+    print(f"[{i}] raciocinio: {raciocinio}, motivo: {motivo}")
+    json_limpo = ler_json(resposta)
+    return json_limpo.get("extracoes", [])
