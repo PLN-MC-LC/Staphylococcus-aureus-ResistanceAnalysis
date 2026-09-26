@@ -9,6 +9,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Cria as pastas necessárias
 mkdir -p "$ROOT/extracoes"
 mkdir -p "$ROOT/corpora"
+mkdir -p "$ROOT/jobs"
 
 source $(conda info --base)/etc/profile.d/conda.sh
 
