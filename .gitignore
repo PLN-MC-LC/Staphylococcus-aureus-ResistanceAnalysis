@@ -253,6 +253,7 @@ TAGS
 corpora/
 tratados/
 extracoes/
+jobs/
 
 # Promps de Sistema e Assistente
 prompts.py
