@@ -4,15 +4,21 @@ set -e
 
 ENV_NAME="MRSA_PLN"
 
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Cria as pastas necessárias
+mkdir -p "$ROOT/extracoes"
+mkdir -p "$ROOT/corpora"
+
 source $(conda info --base)/etc/profile.d/conda.sh
 
 
 eval "$(conda shell.bash hook)"
 
 if conda env list | grep -q "^${ENV_NAME} "; then
-    conda env update -n "$ENV_NAME" -f environment.yml --prune
+    conda env update -n "$ENV_NAME" -f "$ROOT/environment.yml" --prune
 else
-    conda env create -f environment.yml
+    conda env create -f "$ROOT/environment.yml"
 fi
 
 conda activate "$ENV_NAME"
