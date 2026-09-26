@@ -13,7 +13,7 @@ conda activate MRSA_PLN
 
 cd ~/Staphylococcus-aureus-ResistanceAnalysis
 
-python LLM-Extraction/llm_extration.py \
+python LLM-Extraction/llm_extraction.py \
 	--input corpora/corpus_MRSA_post_regex.csv \
         --abstract_column Abstract \
 	--output extracoes/extracoes.json \
