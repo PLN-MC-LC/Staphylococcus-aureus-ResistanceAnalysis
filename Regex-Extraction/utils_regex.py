@@ -22,50 +22,56 @@ def importar_arq(diretorio, abstract_column):
 
     return df
 
-
 def get_regex(abstract_column_tok):
     properties = []
     antibiotics = []
     values = []
     sentences = []
     abstract_indices = []
-    
+ 
     i = -1
     for abstract in abstract_column_tok:
-        i += 1 
+        i += 1
         doc = nlp(str(abstract))
-
+ 
         for sentence in doc.sents:
-
+ 
             property = re.search(
                 r'\b(?:susceptible|sensitive|resistant|resistance)\b',
                 str(sentence),
                 re.IGNORECASE
             )
-
+ 
             if property is not None:
-
-                value = re.search(
-                    r"\d+(?:\.\d+)?\s*%",
-                    str(sentence)
-                )
-
-                if value is not None:
-
-                    antibiotic = re.search(
-                        r"\b(?:to|against)\s+([A-Za-z]+(?:[- ][A-Za-z]+)*)",
+                organism = re.search(
+                        r'\b(?:mrsa|mssa|s. aureus|staphylococcus aureus|vrsa)\b',
                         str(sentence),
                         re.IGNORECASE
                     )
-
-                    if antibiotic is not None:
-
-                        properties.append(property.group(0))
-                        antibiotics.append(antibiotic.group(1))
-                        values.append(value.group(0))
-                        sentences.append(str(sentence))
-                        abstract_indices.append(i)
-
+                if organism is not None:
+ 
+                    value = re.search(
+                        r"\d+(?:\.\d+)?\s*%",
+                        str(sentence)
+                    )
+ 
+                    if value is not None:
+ 
+                        antibiotic = re.search(
+                            r"\b(?:to|against)\s+([A-Za-z]+(?:[- ][A-Za-z]+)*)",
+                            str(sentence),
+                            re.IGNORECASE
+                        )
+ 
+                        if antibiotic is not None:
+ 
+ 
+                            properties.append(property.group(0))
+                            values.append(value.group(0))
+                            sentences.append(str(sentence))
+                            antibiotics.append(antibiotic.group(1))
+                            abstract_indices.append(i)
+ 
     return (
         properties,
         antibiotics,
