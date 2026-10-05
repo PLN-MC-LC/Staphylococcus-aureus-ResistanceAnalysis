@@ -1,5 +1,5 @@
 # 🧬 Staphylococcus aureus - Resistance Analysis
-> Extração e análise de informações sobre resistência antimicrobiana em *Staphylococcus aureus* (MRSA) a partir de textos científicos, combinando Processamento de Linguagem Natural clássico (Regex, SciSpaCy) e Modelos de Linguagem (LLMs).
+> O objetivo do projeto é realizar a extração e análise de informações sobre resistência antimicrobiana em *Staphylococcus aureus* (MRSA) a partir de textos científicos, combinando Processamento de Linguagem Natural clássico (Regex, SciSpaCy) e Modelos de Linguagem (LLMs).
 
 <!------------------------------------>
 
