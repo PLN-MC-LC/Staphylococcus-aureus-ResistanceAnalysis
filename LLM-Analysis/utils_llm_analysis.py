@@ -236,35 +236,34 @@ def tabela_antibioticos(df, output):
 
 
 def plot_antibiotic_cooccurrence(df, coluna, grupo, output):
-    antibioticos = sorted(df[coluna].dropna().unique())
 
+    presenca = pd.crosstab(df[grupo], df[coluna]).clip(upper=1)
+    presenca = presenca.reindex(sorted(presenca.columns), axis=1)
+
+    contagens = presenca.T.dot(presenca)
+    n_abs = np.diag(contagens.values).astype(float)
+
+    uniao = n_abs[:, None] + n_abs[None, :] - contagens.values
     matriz = pd.DataFrame(
-        0,
-        index=antibioticos,
-        columns=antibioticos,
-        dtype=int
+        contagens.values / uniao,
+        index=contagens.index,
+        columns=contagens.columns,
     )
 
-    for _, dados in df.groupby(grupo):
-        antibioticos_abstract = dados[coluna].dropna().unique()
-
-        for a, b in itertools.combinations(antibioticos_abstract, 2):
-            matriz.loc[a, b] += 1
-            matriz.loc[b, a] += 1
-
-        for antibiotico in antibioticos_abstract:
-            matriz.loc[antibiotico, antibiotico] += 1
+    mask = np.triu(np.ones_like(matriz, dtype=bool))
 
     plt.figure(figsize=(16, 14))
 
     sns.heatmap(
         matriz,
+        mask=mask,
         annot=True,
-        fmt="d",
+        fmt=".2f",
         cmap="cividis",
         linewidths=0.5,
         linecolor="white",
-        annot_kws={"fontsize": 7}
+        annot_kws={"fontsize": 7},
+        cbar_kws={"label": "Jaccard index"},
     )
 
     plt.xticks(rotation=90)
@@ -272,7 +271,6 @@ def plot_antibiotic_cooccurrence(df, coluna, grupo, output):
 
     plt.xlabel("Antibiotic")
     plt.ylabel("Antibiotic")
-    plt.title("Antibiotic co-occurrence")
 
     path = os.path.join(
         output,
