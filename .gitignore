@@ -252,8 +252,4 @@ TAGS
 # arquivos baixados/tratados
 corpora/
 tratados/
-extracoes/
 jobs/
-
-# Promps de Sistema e Assistente
-prompts.py
