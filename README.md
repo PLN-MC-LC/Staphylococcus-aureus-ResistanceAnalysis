@@ -55,7 +55,7 @@ Este projeto, desenvolvido na disciplina de Processamento de Linguagem Natural, 
 
 1. Ter o [Conda](https://docs.conda.io/en/latest/miniconda.html) (Miniconda ou Anaconda) instalado.
 2. Um sistema com `bash` (Linux, macOS ou WSL no Windows).
-3. Uma chave de API para acessar os LLMs (necessária apenas para as etapas de `LLM-Extraction` e `LLM-Analysis`).
+3. Uma chave de API para acessar os LLMs (necessária apenas para as etapas de `LLM-Extraction`).
 
 ### ⚙️ Configurando o ambiente
 
